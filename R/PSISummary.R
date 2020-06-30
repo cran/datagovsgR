@@ -30,7 +30,13 @@ psi_summary = function(date = "") {
   URL = parse_api_date(api = "environment/psi",
                        input_date = date,
                        summary = TRUE)
-  output = httr::GET(URL)
+
+  if (curl::has_internet()) {
+    output = httr::GET(URL)
+  } else {
+    message("No internet connection found.")
+    return(NULL)
+  }
 
   # Error check
   content.output = parse_api_output(output)

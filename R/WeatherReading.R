@@ -30,7 +30,14 @@ weather_reading = function(date_time = "", simplify = FALSE) {
   URL.air.temp = parse_api_date(api = "environment/air-temperature",
                                 input_date = date_time,
                                 summary = FALSE)
-  output.air.temp = httr::GET(URL.air.temp)
+
+  if (curl::has_internet()) {
+    output.air.temp = httr::GET(URL.air.temp)
+  } else {
+    message("No internet connection found.")
+    return(NULL)
+  }
+
   content.output.air.temp = parse_api_output(output.air.temp)
 
   air_temp = dplyr::bind_rows(content.output.air.temp$items[[1]]$readings)
