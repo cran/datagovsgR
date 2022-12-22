@@ -1,44 +1,75 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
 
 <title>datagovsgR</title>
 
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 
-<style type="text/css">code{white-space: pre;}</style>
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -47,9 +78,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -106,6 +137,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
+
 <style type="text/css">body {
 background-color: #fff;
 margin: 1em auto;
@@ -116,9 +148,6 @@ padding-right: 2em;
 font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 font-size: 14px;
 line-height: 1.35;
-}
-#header {
-text-align: center;
 }
 #TOC {
 clear: both;
@@ -287,7 +316,8 @@ code > span.st { color: #d14; }
 code > span.co { color: #888888; font-style: italic; } 
 code > span.ot { color: #007020; } 
 code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
 
@@ -306,229 +336,275 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <div id="description-of-datagovsgr" class="section level2">
 <h2>Description of <code>datagovsgR</code></h2>
-<p>The goal of this package is to create API wrappers for the APIs found on the GovTech. GovTech is the Singapore department focused on data and technology, which currently has a list of API tools for developers to leverage on, found on their website. These developer API tools are publicly accessible, containing tools such as realtime weather readings, carpark availability and locations of available taxis. The API wrappers are listed below.</p>
+<p>The goal of this package is to create API wrappers for the APIs found
+on the GovTech. GovTech is the Singapore department focused on data and
+technology, which currently has a list of API tools for developers to
+leverage on, found on their website. These developer API tools are
+publicly accessible, containing tools such as realtime weather readings,
+carpark availability and locations of available taxis. The API wrappers
+are listed below.</p>
 <p><br></p>
 </div>
 <div id="carpark-availability" class="section level2">
 <h2>Carpark Availability</h2>
-<p>This functions calls upon the carpark availability API from data.gov.sg and processes the returning page, returning a dataframe containing the carpark id, type, last update, total lots, and current lots. A date-time has to be specified, otherwise the default is set to return the current date-time.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">carpark_availability</span>(<span class="dt">date =</span> <span class="st">&quot;2019-06-05T10:10:10&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="co">#&gt; Closest timestamp: 2019-06-05T10:09:27+08:00</span></a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="co">#&gt;     id type         last_update total_lots availability_lots</span></a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co">#&gt; 1 HE12    C 2019-06-05T10:08:42         83                 0</span></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="co">#&gt; 2  HLM    C 2019-06-05T10:08:52        583               183</span></a>
-<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="co">#&gt; 3  RHM    C 2019-06-05T10:08:42        322               128</span></a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="co">#&gt; 4 BM29    C 2019-06-05T10:08:49         97                49</span></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="co">#&gt; 5  Q81    C 2019-06-05T10:08:48         96                21</span></a>
-<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="co">#&gt; 6  C20    C 2019-06-05T10:08:30        173                 0</span></a></code></pre></div>
+<p>This functions calls upon the carpark availability API from
+data.gov.sg and processes the returning page, returning a dataframe
+containing the carpark id, type, last update, total lots, and current
+lots. A date-time has to be specified, otherwise the default is set to
+return the current date-time.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">carpark_availability</span>(<span class="at">date =</span> <span class="st">&quot;2019-06-05T10:10:10&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Closest timestamp: 2019-06-05T10:09:27+08:00</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     id type         last_update total_lots availability_lots</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 HE12    C 2019-06-05T10:08:42         83                 0</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  HLM    C 2019-06-05T10:08:52        583               183</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  RHM    C 2019-06-05T10:08:42        322               128</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 BM29    C 2019-06-05T10:08:49         97                49</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5  Q81    C 2019-06-05T10:08:48         96                21</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6  C20    C 2019-06-05T10:08:30        173                 0</span></span></code></pre></div>
 <p><br></p>
 </div>
 <div id="pm-2.5" class="section level2">
 <h2>PM 2.5</h2>
-<p>This functions calls upon the PM2.5 API from data.gov.sg and returns a data frame of the different measures of PM2.5 across 5 different areas in Singapore. This data provided by the API is updated hourly from NEA. There are 2 functions, the <code>pm25</code> which returns the data for a given date-time, and <code>pm25_summary</code> which returns the data summary for a given date.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">pm25</span>(<span class="dt">date_time =</span> <span class="st">&quot;2018-01-04T09:16:17&quot;</span>)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co">#&gt; Closest timestamp: 2018-01-04T09:00:00+08:00</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="co">#&gt;   west east central south north</span></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">#&gt; 1   13   18      13    11    10</span></a></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">pm25_summary</span>(<span class="dt">date =</span> <span class="st">&quot;2018-01-04&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co">#&gt;                   timestamp west east central south north</span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">#&gt; 1 2018-01-04T01:00:00+08:00   10   10       9     4    11</span></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">#&gt; 2 2018-01-04T02:00:00+08:00   17   15       7     7    16</span></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">#&gt; 3 2018-01-04T03:00:00+08:00    7    9       4     8    12</span></a>
-<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="co">#&gt; 4 2018-01-04T04:00:00+08:00    5   12       3    15    19</span></a>
-<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">#&gt; 5 2018-01-04T05:00:00+08:00    9   11       8    14    13</span></a>
-<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co">#&gt; 6 2018-01-04T06:00:00+08:00    5   11      13    11    15</span></a></code></pre></div>
+<p>This functions calls upon the PM2.5 API from data.gov.sg and returns
+a data frame of the different measures of PM2.5 across 5 different areas
+in Singapore. This data provided by the API is updated hourly from NEA.
+There are 2 functions, the <code>pm25</code> which returns the data for
+a given date-time, and <code>pm25_summary</code> which returns the data
+summary for a given date.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pm25</span>(<span class="at">date_time =</span> <span class="st">&quot;2018-01-04T09:16:17&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Closest timestamp: 2018-01-04T09:00:00+08:00</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   west east central south north</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1   13   18      13    11    10</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pm25_summary</span>(<span class="at">date =</span> <span class="st">&quot;2018-01-04&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                   timestamp west east central south north</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 2018-01-04T01:00:00+08:00   10   10       9     4    11</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 2018-01-04T02:00:00+08:00   17   15       7     7    16</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 2018-01-04T03:00:00+08:00    7    9       4     8    12</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 2018-01-04T04:00:00+08:00    5   12       3    15    19</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 2018-01-04T05:00:00+08:00    9   11       8    14    13</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 2018-01-04T06:00:00+08:00    5   11      13    11    15</span></span></code></pre></div>
 <p><br></p>
 </div>
 <div id="poullutantstandardindex-psi" class="section level2">
 <h2>PoullutantStandardIndex (PSI)</h2>
-<p>This functions calls upon the PSI API from data.gov.sg and returns a data frame of the different measures of the PSI across 5 different areas in Singapores and the overall measure for the given data-time. This data provided by the API is updated hourly. There are 2 functions, the <code>psi</code> which returns the data for a given date-time, and <code>psi_summary</code> which returns the data summary for a given date.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">psi</span>(<span class="dt">date =</span> <span class="st">&quot;2019-11-08T17:30:00&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="co">#&gt; Closest timestamp: 2019-11-08T17:00:00+08:00</span></a>
-<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co">#&gt;              psi_measures west national east central south north</span></a>
-<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">#&gt; 1            o3_sub_index   12       20   13      20    13    17</span></a>
-<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co">#&gt; 2 pm10_twenty_four_hourly   33       39   35      29    39    30</span></a>
-<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">#&gt; 3          pm10_sub_index   33       39   35      29    39    30</span></a>
-<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">#&gt; 4            co_sub_index    4        9    9       2     4     5</span></a>
-<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="co">#&gt; 5 pm25_twenty_four_hourly   21       22   21      18    22    19</span></a>
-<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="co">#&gt; 6           so2_sub_index    8        8    3       3     8     5</span></a></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">psi_summary</span>(<span class="dt">date =</span> <span class="st">&quot;2018-01-04&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co">#&gt;                   date_time   region o3_sub_index pm10_twenty_four_hourly</span></a>
-<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">#&gt; 1 2018-01-04T01:00:00+08:00     west            5                      22</span></a>
-<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co">#&gt; 2 2018-01-04T01:00:00+08:00 national            9                      27</span></a>
-<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co">#&gt; 3 2018-01-04T01:00:00+08:00     east            9                      24</span></a>
-<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="co">#&gt; 4 2018-01-04T01:00:00+08:00  central            5                      18</span></a>
-<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="co">#&gt; 5 2018-01-04T01:00:00+08:00    south            4                      27</span></a>
-<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="co">#&gt; 6 2018-01-04T01:00:00+08:00    north            7                      23</span></a>
-<a class="sourceLine" id="cb5-9" data-line-number="9"><span class="co">#&gt;   pm10_sub_index co_sub_index pm25_twenty_four_hourly so2_sub_index</span></a>
-<a class="sourceLine" id="cb5-10" data-line-number="10"><span class="co">#&gt; 1             22            6                       9             6</span></a>
-<a class="sourceLine" id="cb5-11" data-line-number="11"><span class="co">#&gt; 2             27            7                      13             6</span></a>
-<a class="sourceLine" id="cb5-12" data-line-number="12"><span class="co">#&gt; 3             24            2                      11             2</span></a>
-<a class="sourceLine" id="cb5-13" data-line-number="13"><span class="co">#&gt; 4             18            7                      11             2</span></a>
-<a class="sourceLine" id="cb5-14" data-line-number="14"><span class="co">#&gt; 5             27            7                      12             4</span></a>
-<a class="sourceLine" id="cb5-15" data-line-number="15"><span class="co">#&gt; 6             23            6                      13             3</span></a>
-<a class="sourceLine" id="cb5-16" data-line-number="16"><span class="co">#&gt;   co_eight_hour_max no2_one_hour_max so2_twenty_four_hourly pm25_sub_index</span></a>
-<a class="sourceLine" id="cb5-17" data-line-number="17"><span class="co">#&gt; 1              0.64               17                      9             39</span></a>
-<a class="sourceLine" id="cb5-18" data-line-number="18"><span class="co">#&gt; 2              0.73               38                      9             52</span></a>
-<a class="sourceLine" id="cb5-19" data-line-number="19"><span class="co">#&gt; 3              0.21               28                      3             47</span></a>
-<a class="sourceLine" id="cb5-20" data-line-number="20"><span class="co">#&gt; 4              0.73               35                      3             45</span></a>
-<a class="sourceLine" id="cb5-21" data-line-number="21"><span class="co">#&gt; 5              0.70               38                      6             49</span></a>
-<a class="sourceLine" id="cb5-22" data-line-number="22"><span class="co">#&gt; 6              0.57               15                      4             52</span></a>
-<a class="sourceLine" id="cb5-23" data-line-number="23"><span class="co">#&gt;   psi_twenty_four_hourly o3_eight_hour_max</span></a>
-<a class="sourceLine" id="cb5-24" data-line-number="24"><span class="co">#&gt; 1                     39                12</span></a>
-<a class="sourceLine" id="cb5-25" data-line-number="25"><span class="co">#&gt; 2                     52                20</span></a>
-<a class="sourceLine" id="cb5-26" data-line-number="26"><span class="co">#&gt; 3                     47                20</span></a>
-<a class="sourceLine" id="cb5-27" data-line-number="27"><span class="co">#&gt; 4                     45                11</span></a>
-<a class="sourceLine" id="cb5-28" data-line-number="28"><span class="co">#&gt; 5                     49                 9</span></a>
-<a class="sourceLine" id="cb5-29" data-line-number="29"><span class="co">#&gt; 6                     52                17</span></a></code></pre></div>
+<p>This functions calls upon the PSI API from data.gov.sg and returns a
+data frame of the different measures of the PSI across 5 different areas
+in Singapores and the overall measure for the given data-time. This data
+provided by the API is updated hourly. There are 2 functions, the
+<code>psi</code> which returns the data for a given date-time, and
+<code>psi_summary</code> which returns the data summary for a given
+date.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">psi</span>(<span class="at">date =</span> <span class="st">&quot;2019-11-08T17:30:00&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Closest timestamp: 2019-11-08T17:00:00+08:00</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;              psi_measures west national east central south north</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1            o3_sub_index   12       20   13      20    13    17</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 pm10_twenty_four_hourly   33       39   35      29    39    30</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3          pm10_sub_index   33       39   35      29    39    30</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4            co_sub_index    4        9    9       2     4     5</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 pm25_twenty_four_hourly   21       22   21      18    22    19</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6           so2_sub_index    8        8    3       3     8     5</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">psi_summary</span>(<span class="at">date =</span> <span class="st">&quot;2018-01-04&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                   date_time   region o3_sub_index pm10_twenty_four_hourly</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 2018-01-04T01:00:00+08:00     west            5                      22</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 2018-01-04T01:00:00+08:00 national            9                      27</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 2018-01-04T01:00:00+08:00     east            9                      24</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 2018-01-04T01:00:00+08:00  central            5                      18</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 2018-01-04T01:00:00+08:00    south            4                      27</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 2018-01-04T01:00:00+08:00    north            7                      23</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   pm10_sub_index co_sub_index pm25_twenty_four_hourly so2_sub_index</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1             22            6                       9             6</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2             27            7                      13             6</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3             24            2                      11             2</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4             18            7                      11             2</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5             27            7                      12             4</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6             23            6                      13             3</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   co_eight_hour_max no2_one_hour_max so2_twenty_four_hourly pm25_sub_index</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1              0.64               17                      9             39</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2              0.73               38                      9             52</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3              0.21               28                      3             47</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4              0.73               35                      3             45</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5              0.70               38                      6             49</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6              0.57               15                      4             52</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   psi_twenty_four_hourly o3_eight_hour_max</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1                     39                12</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2                     52                20</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3                     47                20</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4                     45                11</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5                     49                 9</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6                     52                17</span></span></code></pre></div>
 <p><br></p>
 </div>
 <div id="taxi-availability" class="section level2">
 <h2>Taxi Availability</h2>
-<p>This functions calls upon the taxi availability API from data.gov.sg and returns a data frame of the locations of all availible taxis in longitude and latitude values. A date-time has to be specified, otherwise the default is set to return the current date-time.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">taxi_availability</span>(<span class="dt">date =</span> <span class="st">&quot;2019-08-07T09:30:00&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="co">#&gt; Timestamp: 2019-08-07T09:29:55+08:00</span></a>
-<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="co">#&gt; Availible Taxis: 4586</span></a>
-<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="co">#&gt;       long     lat</span></a>
-<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="co">#&gt; 1 103.6142 1.25267</span></a>
-<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="co">#&gt; 2 103.6235 1.28648</span></a>
-<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="co">#&gt; 3 103.6236 1.30047</span></a>
-<a class="sourceLine" id="cb6-8" data-line-number="8"><span class="co">#&gt; 4 103.6238 1.28678</span></a>
-<a class="sourceLine" id="cb6-9" data-line-number="9"><span class="co">#&gt; 5 103.6275 1.31123</span></a>
-<a class="sourceLine" id="cb6-10" data-line-number="10"><span class="co">#&gt; 6 103.6282 1.31332</span></a></code></pre></div>
+<p>This functions calls upon the taxi availability API from data.gov.sg
+and returns a data frame of the locations of all availible taxis in
+longitude and latitude values. A date-time has to be specified,
+otherwise the default is set to return the current date-time.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">taxi_availability</span>(<span class="at">date =</span> <span class="st">&quot;2019-08-07T09:30:00&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Timestamp: 2019-08-07T09:29:55+08:00</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Availible Taxis: 4586</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       long     lat</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 103.6142 1.25267</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 103.6235 1.28648</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 103.6236 1.30047</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 103.6238 1.28678</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 103.6275 1.31123</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 103.6282 1.31332</span></span></code></pre></div>
 <p><br></p>
 </div>
 <div id="weather-forecast" class="section level2">
 <h2>Weather Forecast</h2>
-<p>This functions calls upon the weather forecast API from data.gov.sg and returns a data frame containing different metrics of the forecast. 2-hour, 24-hour and 4-day forecasts are availible. It then returns a dataframe containing the forecast which is dependent on the date-time and parameter of forecast. This data provided by the API is updated half-hourly. A date-time has to be specified, otherwise the default is set to return the current date-time.</p>
-<p>A 2-hour forecast returns the general forecast for each area in Singapore for the next 2-hours; a 24-hour forecast returns the general forecast for the next day along with the weather metrics; a 4-day forecast returns the general forecast for each of the next four days.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">weather_forecast</span>(<span class="dt">date =</span> <span class="st">&quot;2019-11-08T17:30:00&quot;</span>, <span class="dt">forecast =</span> <span class="st">&quot;2-hour&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="co">#&gt; Closest timestamp: 2019-11-08T17:30:00+08:00</span></a>
-<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="co">#&gt; Forecast valid to: 2019-11-08T19:30:00+08:00</span></a>
-<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="co">#&gt;          area            forecast</span></a>
-<a class="sourceLine" id="cb7-5" data-line-number="5"><span class="co">#&gt; 1  Ang Mo Kio Partly Cloudy (Day)</span></a>
-<a class="sourceLine" id="cb7-6" data-line-number="6"><span class="co">#&gt; 2       Bedok Partly Cloudy (Day)</span></a>
-<a class="sourceLine" id="cb7-7" data-line-number="7"><span class="co">#&gt; 3      Bishan Partly Cloudy (Day)</span></a>
-<a class="sourceLine" id="cb7-8" data-line-number="8"><span class="co">#&gt; 4    Boon Lay Partly Cloudy (Day)</span></a>
-<a class="sourceLine" id="cb7-9" data-line-number="9"><span class="co">#&gt; 5 Bukit Batok Partly Cloudy (Day)</span></a>
-<a class="sourceLine" id="cb7-10" data-line-number="10"><span class="co">#&gt; 6 Bukit Merah Partly Cloudy (Day)</span></a></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">weather_forecast</span>(<span class="dt">date =</span> <span class="st">&quot;2018-01-04T09:16:17&quot;</span>, <span class="dt">forecast =</span> <span class="st">&quot;4-day&quot;</span>)</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="co">#&gt; Closest timestamp: 2018-01-04T05:16:00+08:00</span></a>
-<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="co">#&gt;         date                                   general_forecast</span></a>
-<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="co">#&gt; 1 2018-01-05 Late morning and early afternoon thundery showers.</span></a>
-<a class="sourceLine" id="cb8-5" data-line-number="5"><span class="co">#&gt; 2 2018-01-06                        Afternoon thundery showers.</span></a>
-<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="co">#&gt; 3 2018-01-07 Late morning and early afternoon thundery showers.</span></a>
-<a class="sourceLine" id="cb8-7" data-line-number="7"><span class="co">#&gt; 4 2018-01-08                        Afternoon thundery showers.</span></a>
-<a class="sourceLine" id="cb8-8" data-line-number="8"><span class="co">#&gt;   relative_humidity_low relative_humidity_high temperature_low</span></a>
-<a class="sourceLine" id="cb8-9" data-line-number="9"><span class="co">#&gt; 1                    65                     95              23</span></a>
-<a class="sourceLine" id="cb8-10" data-line-number="10"><span class="co">#&gt; 2                    60                     95              24</span></a>
-<a class="sourceLine" id="cb8-11" data-line-number="11"><span class="co">#&gt; 3                    60                     95              24</span></a>
-<a class="sourceLine" id="cb8-12" data-line-number="12"><span class="co">#&gt; 4                    60                     95              24</span></a>
-<a class="sourceLine" id="cb8-13" data-line-number="13"><span class="co">#&gt;   temperature_high wind_direction wind_speed_low wind_speed_high</span></a>
-<a class="sourceLine" id="cb8-14" data-line-number="14"><span class="co">#&gt; 1               32       VARIABLE              5              15</span></a>
-<a class="sourceLine" id="cb8-15" data-line-number="15"><span class="co">#&gt; 2               33              S              5              15</span></a>
-<a class="sourceLine" id="cb8-16" data-line-number="16"><span class="co">#&gt; 3               33             SE             10              20</span></a>
-<a class="sourceLine" id="cb8-17" data-line-number="17"><span class="co">#&gt; 4               33            ENE             10              20</span></a></code></pre></div>
+<p>This functions calls upon the weather forecast API from data.gov.sg
+and returns a data frame containing different metrics of the forecast.
+2-hour, 24-hour and 4-day forecasts are availible. It then returns a
+dataframe containing the forecast which is dependent on the date-time
+and parameter of forecast. This data provided by the API is updated
+half-hourly. A date-time has to be specified, otherwise the default is
+set to return the current date-time.</p>
+<p>A 2-hour forecast returns the general forecast for each area in
+Singapore for the next 2-hours; a 24-hour forecast returns the general
+forecast for the next day along with the weather metrics; a 4-day
+forecast returns the general forecast for each of the next four
+days.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">weather_forecast</span>(<span class="at">date =</span> <span class="st">&quot;2019-11-08T17:30:00&quot;</span>, <span class="at">forecast =</span> <span class="st">&quot;2-hour&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Closest timestamp: 2019-11-08T17:30:00+08:00</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Forecast valid to: 2019-11-08T19:30:00+08:00</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          area            forecast</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  Ang Mo Kio Partly Cloudy (Day)</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2       Bedok Partly Cloudy (Day)</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3      Bishan Partly Cloudy (Day)</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4    Boon Lay Partly Cloudy (Day)</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 Bukit Batok Partly Cloudy (Day)</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 Bukit Merah Partly Cloudy (Day)</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">weather_forecast</span>(<span class="at">date =</span> <span class="st">&quot;2018-01-04T09:16:17&quot;</span>, <span class="at">forecast =</span> <span class="st">&quot;4-day&quot;</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Closest timestamp: 2018-01-04T05:16:00+08:00</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         date                                   general_forecast</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 2018-01-05 Late morning and early afternoon thundery showers.</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 2018-01-06                        Afternoon thundery showers.</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 2018-01-07 Late morning and early afternoon thundery showers.</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 2018-01-08                        Afternoon thundery showers.</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   relative_humidity_low relative_humidity_high temperature_low temperature_high</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1                    65                     95              23               32</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2                    60                     95              24               33</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3                    60                     95              24               33</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4                    60                     95              24               33</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   wind_direction wind_speed_low wind_speed_high</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1       VARIABLE              5              15</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2              S              5              15</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3             SE             10              20</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4            ENE             10              20</span></span></code></pre></div>
 <p><br></p>
 </div>
 <div id="weather-reading" class="section level2">
 <h2>Weather Reading</h2>
-<p>This functions calls upon the weather reading API from data.gov.sg and returns a list containing the air temperature, rainfall, relative humidity, wind direction and speed across Singapore. Data is updated every 5 minutes for the rainfall API, and every half minute for the other 4 API from NEA. A date-time has to be specified, otherwise the default is set to return the current date-time. Do note that this API takes slighlty longer than the other APIs in the package as 5 APIs are wrapped within this function.</p>
-<p>The <code>simplify</code> parameter is <code>FALSE</code> on default, returning a list of each of the 5 metrics. Otherwise, <code>simplify = TRUE</code> would return a data frame where all 5 metrics are joined according to weather stations, but return several NAs, as most weather stations collect rainfall data only.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">weather_reading</span>(<span class="dt">date =</span> <span class="st">&quot;2019-11-08T17:30:00&quot;</span>)</a>
-<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="co">#&gt; $air_temp</span></a>
-<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="co">#&gt; # A tibble: 14 x 2</span></a>
-<a class="sourceLine" id="cb9-4" data-line-number="4"><span class="co">#&gt;    station_id value</span></a>
-<a class="sourceLine" id="cb9-5" data-line-number="5"><span class="co">#&gt;    &lt;chr&gt;      &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb9-6" data-line-number="6"><span class="co">#&gt;  1 S117        29.7</span></a>
-<a class="sourceLine" id="cb9-7" data-line-number="7"><span class="co">#&gt;  2 S50         30.1</span></a>
-<a class="sourceLine" id="cb9-8" data-line-number="8"><span class="co">#&gt;  3 S107        29.6</span></a>
-<a class="sourceLine" id="cb9-9" data-line-number="9"><span class="co">#&gt;  4 S43         30.6</span></a>
-<a class="sourceLine" id="cb9-10" data-line-number="10"><span class="co">#&gt;  5 S44         29.4</span></a>
-<a class="sourceLine" id="cb9-11" data-line-number="11"><span class="co">#&gt;  6 S121        30.5</span></a>
-<a class="sourceLine" id="cb9-12" data-line-number="12"><span class="co">#&gt;  7 S106        29.5</span></a>
-<a class="sourceLine" id="cb9-13" data-line-number="13"><span class="co">#&gt;  8 S111        30.4</span></a>
-<a class="sourceLine" id="cb9-14" data-line-number="14"><span class="co">#&gt;  9 S122        29.7</span></a>
-<a class="sourceLine" id="cb9-15" data-line-number="15"><span class="co">#&gt; 10 S60         30.7</span></a>
-<a class="sourceLine" id="cb9-16" data-line-number="16"><span class="co">#&gt; 11 S115        28.5</span></a>
-<a class="sourceLine" id="cb9-17" data-line-number="17"><span class="co">#&gt; 12 S116        30.1</span></a>
-<a class="sourceLine" id="cb9-18" data-line-number="18"><span class="co">#&gt; 13 S104        30.2</span></a>
-<a class="sourceLine" id="cb9-19" data-line-number="19"><span class="co">#&gt; 14 S100        30.3</span></a>
-<a class="sourceLine" id="cb9-20" data-line-number="20"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb9-21" data-line-number="21"><span class="co">#&gt; $rainfall</span></a>
-<a class="sourceLine" id="cb9-22" data-line-number="22"><span class="co">#&gt; # A tibble: 52 x 2</span></a>
-<a class="sourceLine" id="cb9-23" data-line-number="23"><span class="co">#&gt;    station_id value</span></a>
-<a class="sourceLine" id="cb9-24" data-line-number="24"><span class="co">#&gt;    &lt;chr&gt;      &lt;int&gt;</span></a>
-<a class="sourceLine" id="cb9-25" data-line-number="25"><span class="co">#&gt;  1 S105           0</span></a>
-<a class="sourceLine" id="cb9-26" data-line-number="26"><span class="co">#&gt;  2 S77            0</span></a>
-<a class="sourceLine" id="cb9-27" data-line-number="27"><span class="co">#&gt;  3 S109           0</span></a>
-<a class="sourceLine" id="cb9-28" data-line-number="28"><span class="co">#&gt;  4 S117           0</span></a>
-<a class="sourceLine" id="cb9-29" data-line-number="29"><span class="co">#&gt;  5 S64            0</span></a>
-<a class="sourceLine" id="cb9-30" data-line-number="30"><span class="co">#&gt;  6 S90            0</span></a>
-<a class="sourceLine" id="cb9-31" data-line-number="31"><span class="co">#&gt;  7 S61            0</span></a>
-<a class="sourceLine" id="cb9-32" data-line-number="32"><span class="co">#&gt;  8 S114           0</span></a>
-<a class="sourceLine" id="cb9-33" data-line-number="33"><span class="co">#&gt;  9 S11            0</span></a>
-<a class="sourceLine" id="cb9-34" data-line-number="34"><span class="co">#&gt; 10 S50            0</span></a>
-<a class="sourceLine" id="cb9-35" data-line-number="35"><span class="co">#&gt; # ... with 42 more rows</span></a>
-<a class="sourceLine" id="cb9-36" data-line-number="36"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb9-37" data-line-number="37"><span class="co">#&gt; $relative_humidity</span></a>
-<a class="sourceLine" id="cb9-38" data-line-number="38"><span class="co">#&gt; # A tibble: 14 x 2</span></a>
-<a class="sourceLine" id="cb9-39" data-line-number="39"><span class="co">#&gt;    station_id value</span></a>
-<a class="sourceLine" id="cb9-40" data-line-number="40"><span class="co">#&gt;    &lt;chr&gt;      &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb9-41" data-line-number="41"><span class="co">#&gt;  1 S117        83  </span></a>
-<a class="sourceLine" id="cb9-42" data-line-number="42"><span class="co">#&gt;  2 S50         72.7</span></a>
-<a class="sourceLine" id="cb9-43" data-line-number="43"><span class="co">#&gt;  3 S107        82  </span></a>
-<a class="sourceLine" id="cb9-44" data-line-number="44"><span class="co">#&gt;  4 S43         71.4</span></a>
-<a class="sourceLine" id="cb9-45" data-line-number="45"><span class="co">#&gt;  5 S44         78  </span></a>
-<a class="sourceLine" id="cb9-46" data-line-number="46"><span class="co">#&gt;  6 S121        72.7</span></a>
-<a class="sourceLine" id="cb9-47" data-line-number="47"><span class="co">#&gt;  7 S106        79  </span></a>
-<a class="sourceLine" id="cb9-48" data-line-number="48"><span class="co">#&gt;  8 S111        66.6</span></a>
-<a class="sourceLine" id="cb9-49" data-line-number="49"><span class="co">#&gt;  9 S122        79.9</span></a>
-<a class="sourceLine" id="cb9-50" data-line-number="50"><span class="co">#&gt; 10 S60         66.3</span></a>
-<a class="sourceLine" id="cb9-51" data-line-number="51"><span class="co">#&gt; 11 S115        82.8</span></a>
-<a class="sourceLine" id="cb9-52" data-line-number="52"><span class="co">#&gt; 12 S116        80  </span></a>
-<a class="sourceLine" id="cb9-53" data-line-number="53"><span class="co">#&gt; 13 S104        71.7</span></a>
-<a class="sourceLine" id="cb9-54" data-line-number="54"><span class="co">#&gt; 14 S100        72.9</span></a>
-<a class="sourceLine" id="cb9-55" data-line-number="55"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb9-56" data-line-number="56"><span class="co">#&gt; $wind_direction</span></a>
-<a class="sourceLine" id="cb9-57" data-line-number="57"><span class="co">#&gt; # A tibble: 15 x 2</span></a>
-<a class="sourceLine" id="cb9-58" data-line-number="58"><span class="co">#&gt;    station_id value</span></a>
-<a class="sourceLine" id="cb9-59" data-line-number="59"><span class="co">#&gt;    &lt;chr&gt;      &lt;int&gt;</span></a>
-<a class="sourceLine" id="cb9-60" data-line-number="60"><span class="co">#&gt;  1 S109         297</span></a>
-<a class="sourceLine" id="cb9-61" data-line-number="61"><span class="co">#&gt;  2 S117         262</span></a>
-<a class="sourceLine" id="cb9-62" data-line-number="62"><span class="co">#&gt;  3 S50          245</span></a>
-<a class="sourceLine" id="cb9-63" data-line-number="63"><span class="co">#&gt;  4 S107         232</span></a>
-<a class="sourceLine" id="cb9-64" data-line-number="64"><span class="co">#&gt;  5 S43          289</span></a>
-<a class="sourceLine" id="cb9-65" data-line-number="65"><span class="co">#&gt;  6 S108         229</span></a>
-<a class="sourceLine" id="cb9-66" data-line-number="66"><span class="co">#&gt;  7 S44          286</span></a>
-<a class="sourceLine" id="cb9-67" data-line-number="67"><span class="co">#&gt;  8 S106         255</span></a>
-<a class="sourceLine" id="cb9-68" data-line-number="68"><span class="co">#&gt;  9 S122         312</span></a>
-<a class="sourceLine" id="cb9-69" data-line-number="69"><span class="co">#&gt; 10 S60          246</span></a>
-<a class="sourceLine" id="cb9-70" data-line-number="70"><span class="co">#&gt; 11 S115         302</span></a>
-<a class="sourceLine" id="cb9-71" data-line-number="71"><span class="co">#&gt; 12 S24          283</span></a>
-<a class="sourceLine" id="cb9-72" data-line-number="72"><span class="co">#&gt; 13 S116         266</span></a>
-<a class="sourceLine" id="cb9-73" data-line-number="73"><span class="co">#&gt; 14 S104         291</span></a>
-<a class="sourceLine" id="cb9-74" data-line-number="74"><span class="co">#&gt; 15 S100         266</span></a>
-<a class="sourceLine" id="cb9-75" data-line-number="75"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb9-76" data-line-number="76"><span class="co">#&gt; $wind_speed</span></a>
-<a class="sourceLine" id="cb9-77" data-line-number="77"><span class="co">#&gt; # A tibble: 15 x 2</span></a>
-<a class="sourceLine" id="cb9-78" data-line-number="78"><span class="co">#&gt;    station_id value</span></a>
-<a class="sourceLine" id="cb9-79" data-line-number="79"><span class="co">#&gt;    &lt;chr&gt;      &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb9-80" data-line-number="80"><span class="co">#&gt;  1 S109         4.6</span></a>
-<a class="sourceLine" id="cb9-81" data-line-number="81"><span class="co">#&gt;  2 S117         3.6</span></a>
-<a class="sourceLine" id="cb9-82" data-line-number="82"><span class="co">#&gt;  3 S50          3.1</span></a>
-<a class="sourceLine" id="cb9-83" data-line-number="83"><span class="co">#&gt;  4 S107        11.9</span></a>
-<a class="sourceLine" id="cb9-84" data-line-number="84"><span class="co">#&gt;  5 S43          4.3</span></a>
-<a class="sourceLine" id="cb9-85" data-line-number="85"><span class="co">#&gt;  6 S108         6.9</span></a>
-<a class="sourceLine" id="cb9-86" data-line-number="86"><span class="co">#&gt;  7 S44          6.3</span></a>
-<a class="sourceLine" id="cb9-87" data-line-number="87"><span class="co">#&gt;  8 S106         2.5</span></a>
-<a class="sourceLine" id="cb9-88" data-line-number="88"><span class="co">#&gt;  9 S122         5.7</span></a>
-<a class="sourceLine" id="cb9-89" data-line-number="89"><span class="co">#&gt; 10 S60          3.6</span></a>
-<a class="sourceLine" id="cb9-90" data-line-number="90"><span class="co">#&gt; 11 S115         6.8</span></a>
-<a class="sourceLine" id="cb9-91" data-line-number="91"><span class="co">#&gt; 12 S24          4.9</span></a>
-<a class="sourceLine" id="cb9-92" data-line-number="92"><span class="co">#&gt; 13 S116        16.4</span></a>
-<a class="sourceLine" id="cb9-93" data-line-number="93"><span class="co">#&gt; 14 S104         5.4</span></a>
-<a class="sourceLine" id="cb9-94" data-line-number="94"><span class="co">#&gt; 15 S100         2.9</span></a></code></pre></div>
+<p>This functions calls upon the weather reading API from data.gov.sg
+and returns a list containing the air temperature, rainfall, relative
+humidity, wind direction and speed across Singapore. Data is updated
+every 5 minutes for the rainfall API, and every half minute for the
+other 4 API from NEA. A date-time has to be specified, otherwise the
+default is set to return the current date-time. Do note that this API
+takes slighlty longer than the other APIs in the package as 5 APIs are
+wrapped within this function.</p>
+<p>The <code>simplify</code> parameter is <code>FALSE</code> on default,
+returning a list of each of the 5 metrics. Otherwise,
+<code>simplify = TRUE</code> would return a data frame where all 5
+metrics are joined according to weather stations, but return several
+NAs, as most weather stations collect rainfall data only.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">weather_reading</span>(<span class="at">date =</span> <span class="st">&quot;2019-11-08T17:30:00&quot;</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $air_temp</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 14 × 2</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    station_id value</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;      &lt;dbl&gt;</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 S117        29.7</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 S50         30.1</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 S107        29.6</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 S43         30.6</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 S44         29.4</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 S121        30.5</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 S106        29.5</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 S111        30.4</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 S122        29.7</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 S60         30.7</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 11 S115        28.5</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 12 S116        30.1</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 13 S104        30.2</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 14 S100        30.3</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $rainfall</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 52 × 2</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    station_id value</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;      &lt;int&gt;</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 S105           0</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 S77            0</span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 S109           0</span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 S117           0</span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 S64            0</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 S90            0</span></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 S61            0</span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 S114           0</span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 S11            0</span></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 S50            0</span></span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 42 more rows</span></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ Use `print(n = ...)` to see more rows</span></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $relative_humidity</span></span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 14 × 2</span></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    station_id value</span></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;      &lt;dbl&gt;</span></span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 S117        83  </span></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 S50         72.7</span></span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 S107        82  </span></span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 S43         71.4</span></span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 S44         78  </span></span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 S121        72.7</span></span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 S106        79  </span></span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 S111        66.6</span></span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 S122        79.9</span></span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 S60         66.3</span></span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 11 S115        82.8</span></span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 12 S116        80  </span></span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 13 S104        71.7</span></span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 14 S100        72.9</span></span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $wind_direction</span></span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 15 × 2</span></span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    station_id value</span></span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;      &lt;int&gt;</span></span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 S109         297</span></span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 S117         262</span></span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 S50          245</span></span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 S107         232</span></span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 S43          289</span></span>
+<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 S108         229</span></span>
+<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 S44          286</span></span>
+<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 S106         255</span></span>
+<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 S122         312</span></span>
+<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 S60          246</span></span>
+<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 11 S115         302</span></span>
+<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 12 S24          283</span></span>
+<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 13 S116         266</span></span>
+<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 14 S104         291</span></span>
+<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 15 S100         266</span></span>
+<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $wind_speed</span></span>
+<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 15 × 2</span></span>
+<span id="cb9-79"><a href="#cb9-79" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    station_id value</span></span>
+<span id="cb9-80"><a href="#cb9-80" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;      &lt;dbl&gt;</span></span>
+<span id="cb9-81"><a href="#cb9-81" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 S109         4.6</span></span>
+<span id="cb9-82"><a href="#cb9-82" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 S117         3.6</span></span>
+<span id="cb9-83"><a href="#cb9-83" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 S50          3.1</span></span>
+<span id="cb9-84"><a href="#cb9-84" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 S107        11.9</span></span>
+<span id="cb9-85"><a href="#cb9-85" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 S43          4.3</span></span>
+<span id="cb9-86"><a href="#cb9-86" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 S108         6.9</span></span>
+<span id="cb9-87"><a href="#cb9-87" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 S44          6.3</span></span>
+<span id="cb9-88"><a href="#cb9-88" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 S106         2.5</span></span>
+<span id="cb9-89"><a href="#cb9-89" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 S122         5.7</span></span>
+<span id="cb9-90"><a href="#cb9-90" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 S60          3.6</span></span>
+<span id="cb9-91"><a href="#cb9-91" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 11 S115         6.8</span></span>
+<span id="cb9-92"><a href="#cb9-92" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 12 S24          4.9</span></span>
+<span id="cb9-93"><a href="#cb9-93" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 13 S116        16.4</span></span>
+<span id="cb9-94"><a href="#cb9-94" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 14 S104         5.4</span></span>
+<span id="cb9-95"><a href="#cb9-95" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 15 S100         2.9</span></span></code></pre></div>
 <hr />
 </div>
 

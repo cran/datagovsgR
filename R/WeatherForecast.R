@@ -28,13 +28,7 @@ weather_forecast = function(date_time = "", forecast = "2-hour") {
   URL = parse_api_date(api = paste0("environment/", forecast, "-weather-forecast"),
                        input_date = date_time,
                        summary = FALSE)
-
-  if (curl::has_internet()) {
-    output = httr::GET(URL)
-  } else {
-    message("No internet connection found.")
-    return(NULL)
-  }
+  output = httr::GET(URL)
 
   # Error check
   content.output = parse_api_output(output)
