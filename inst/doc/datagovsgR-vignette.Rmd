@@ -39,11 +39,11 @@ carpark_availability(date = "2019-06-05T10:10:10") %>% head()
 This functions calls upon the PM2.5 API from data.gov.sg and returns a data frame of the different measures of PM2.5 across 5 different areas in Singapore. This data provided by the API is updated hourly from NEA. There are 2 functions, the `pm25` which returns the data for a given date-time, and `pm25_summary` which returns the data summary for a given date.
 
 ```{r}
-pm25(date_time = "2018-01-04T09:16:17")
+# pm25(date_time = "2018-01-04T09:16:17")
 ```
 
 ```{r}
-pm25_summary(date = "2018-01-04") %>% head()
+# pm25_summary(date = "2018-01-04") %>% head()
 ```
 
 <br>
