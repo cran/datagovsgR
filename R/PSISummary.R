@@ -35,13 +35,9 @@ psi_summary = function(date = "") {
   # Error check
   content.output = parse_api_output(output)
 
-  if (length(content.output$items) == 0 || length(content.output$items) == 1) {
-    return("No data returned from API.")
+  if (length(content.output$items) == 0) {
+    stop("No data returned from API.")
   }
-
-  #if (content.output$api_info$message == "No recent updates from the agency.") {
-  #  stop("No data returned from API.")
-  #}
 
   # Extracting Data Frame
 

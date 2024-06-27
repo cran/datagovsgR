@@ -10,6 +10,9 @@
 #'
 #'
 #' @param date_time Defaults to current (SGD) time. Format: YYYY-MM-DDTHH:MM:SS
+#' @param simplify Defaults to FALSE. Otherwise, simplify = TRUE would return a
+#' data frame where all 5 metrics are joined according to weather stations, but
+#' return several NAs, as most weather stations collect rainfall data only.
 #'
 #' @keywords weather
 #'
@@ -19,9 +22,9 @@
 #' @examples
 #' weather_reading()
 #' weather_reading(date = "2019-11-08T17:30:00")
-#' weather_reading(date = "2018-01-04T09:16:17")
+#' weather_reading(date = "2018-01-04T09:16:17", simplify = TRUE)
 
-weather_reading = function(date_time = "") {
+weather_reading = function(date_time = "", simplify = FALSE) {
 
   # 1. Air Temperature
   URL.air.temp = parse_api_date(api = "environment/air-temperature",
@@ -81,8 +84,21 @@ weather_reading = function(date_time = "") {
                          wind_direction = wind_direction,
                          wind_speed = wind_speed)
 
+  if (simplify == FALSE) {
 
-  return(weather_reading)
+    return(weather_reading)
+
+  } else if (simplify == TRUE) {
+
+    message("Note that the NAs in the data set are due to the particular weather station not collecting a particular weather information.")
+
+    return(purrr::reduce(weather_reading, dplyr::full_join, by = "station_id"))
+
+  } else {
+
+    stop("Did you enter the correct parameters for simplify? By default, simplify = FALSE returns a list, while simplify = TRUE returns a data frame.")
+
+  }
 
 }
 
